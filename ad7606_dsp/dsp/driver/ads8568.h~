@@ -1,0 +1,97 @@
+#ifndef _ADS8568_H_
+#define _ADS8568_H_
+
+
+#include "TL6748.h"                 // 创龙 DSP6748 开发板相关声明
+
+#include "hw_types.h"				// 宏命令
+
+#include "hw_syscfg0_C6748.h"	    // 系统配置模块寄存器
+#include "soc_C6748.h"			    // DSP C6748 外设寄存器
+
+#include "psc.h"			        // 电源与睡眠控制宏及设备抽象层函数声明
+#include "gpio.h"					// 通用输入输出口宏及设备抽象层函数声明
+
+#include "interrupt.h"             // DSP C6748 中断相关应用程序接口函数声明及系统事件号定义
+
+#include "emifa.h"                 // 外部存储器接口宏及设备抽象层函数声明
+
+#include "uartStdio.h"             // 串口标准输入输出终端函数声明
+#include "timer.h"
+#include "dspcache.h"
+#include "EMIFAPinmuxSetup.h"
+
+/****************************************************************************/
+/*                                                                          */
+/*              宏定义                                                      */
+/*                                                                          */
+/****************************************************************************/
+#define PINMUX11_BUSY_ENABLE     (SYSCFG_PINMUX11_PINMUX11_19_16_GPIO5_11 << \
+								    SYSCFG_PINMUX11_PINMUX11_19_16_SHIFT)
+
+#define PINMUX11_CONVST_ENABLE   (SYSCFG_PINMUX11_PINMUX11_11_8_GPIO5_13 << \
+								    SYSCFG_PINMUX11_PINMUX11_11_8_SHIFT)
+
+#define PINMUX11_RESRT_ENABLE    (SYSCFG_PINMUX11_PINMUX11_15_12_GPIO5_12 << \
+								    SYSCFG_PINMUX11_PINMUX11_15_12_SHIFT)
+
+#define AD8568_WRITE_ENABLE		(0x80000000u)
+#define AD8568_READ_ENABLE		(0x40000000u)
+
+#define AD8568_CLKSEL_INTERNAL	(0x00000000u)
+#define AD8568_CLKSEL_EXTERNAL	(0x20000000u)
+
+#define AD8568_BUSY_PIN_MODE	(0x00000000u)
+#define AD8568_INT_PIN_MODE		(0x08000000u)
+
+#define AD8568_BUSY_POL_HIGH	(0x00000000u)
+#define AD8568_BUSY_POL_LOW		(0x04000000u)
+
+#define AD8568_PowerDown		(0x02000000u)
+
+#define AD8568_RangeA_4VREF		(0x00000000u)
+#define AD8568_RangeA_2VREF		(0x01000000u)
+
+#define AD8568_RangeB_4VREF		(0x00000000u)
+#define AD8568_RangeB_2VREF		(0x00800000u)
+
+#define AD8568_RangeC_4VREF		(0x00000000u)
+#define AD8568_RangeC_2VREF		(0x00200000u)
+
+#define AD8568_RangeD_4VREF		(0x00000000u)
+#define AD8568_RangeD_2VREF		(0x00080000u)
+
+#define AD8568_PowerUpB			(0x00000000u)
+#define AD8568_PowerDownB		(0x00400000u)
+
+#define AD8568_PowerUpC			(0x00000000u)
+#define AD8568_PowerDownC		(0x00100000u)
+
+#define AD8568_PowerUpD			(0x00000000u)
+#define AD8568_PowerDownD		(0x00040000u)
+
+#define AD8568_REF_DISABLE		(0x00000000u)
+#define AD8568_REF_ENABLE		(0x00008000u)
+
+#define AD8568_REFBUF_ENABLE	(0x00000000u)
+#define AD8568_REFBUF_DISABLE	(0x00004000u)
+
+#define AD8568_REF_SET2V5		(0x00000000u)
+#define AD8568_REF_SET3V		(0x00002000u)
+
+#define AD8568_REFDAC_FULL		(0x000003FFu)
+
+void ads8568_write_reg( ads8568 *ad, unsigned int value ) ;
+void ads8568_set_channel(ads8568 *ad, unsigned int ch) ;
+void ads8568_trigger(ads8568 *ad, unsigned int count, TRIGGER_CALLBACK cb, void *user_data) ;
+void ads8568_stop(ads8568 *ad);
+void ads8568_start(ads8568 *ad, unsigned int rate) ;
+static void ads8568_on_ticked(UArg ad_ptr) ;
+void ads8568_destroy(ads8568 *ad);
+void 	ads8568_reset( ads8568 *ad );
+ads8568 * ads8568_new(unsigned int range, RingBuffer *buffer) ;
+static void ads8568_irq_setup(ads8568 *ad);
+static void ads8568_busy_hwi(UArg ad_addr) ;
+static void ads8568_gpio_setup(ads8568 *ad) ;
+static void ads8568_emifa_init(ads8568 *ad) ;
+#endif

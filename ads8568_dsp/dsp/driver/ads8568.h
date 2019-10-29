@@ -1,0 +1,92 @@
+
+#ifndef _ADS8568_H_
+#define _ADS8568_H_
+
+#include "ring_buffer.h"              
+  
+#include "ads8568_emif.h"
+#include "hw/hw_syscfg0_OMAPL138.h"
+#include "hw/hw_psc_OMAPL138.h"
+#include "hw/soc_OMAPL138.h"
+#include "c674x/omapl138/interrupt.h"
+#include "psc.h"
+#include "gpio.h"
+#include "emifa.h"
+
+
+#define PINMUX11_BUSY_ENABLE     (SYSCFG_PINMUX11_PINMUX11_19_16_GPIO5_11 << \
+								    SYSCFG_PINMUX11_PINMUX11_19_16_SHIFT)
+
+#define PINMUX11_CONVST_ENABLE   (SYSCFG_PINMUX11_PINMUX11_11_8_GPIO5_13 << \
+								    SYSCFG_PINMUX11_PINMUX11_11_8_SHIFT)
+
+#define PINMUX11_RESRT_ENABLE    (SYSCFG_PINMUX11_PINMUX11_15_12_GPIO5_12 << \
+								    SYSCFG_PINMUX11_PINMUX11_15_12_SHIFT)
+
+#define AD8568_WRITE_ENABLE		(0x80000000u)
+#define AD8568_READ_ENABLE		(0x40000000u)
+
+#define AD8568_CLKSEL_INTERNAL		(0x00000000u)
+#define AD8568_CLKSEL_EXTERNAL		(0x20000000u)
+
+#define AD8568_BUSY_PIN_MODE		(0x00000000u)
+#define AD8568_INT_PIN_MODE		(0x08000000u)
+
+#define AD8568_BUSY_POL_HIGH		(0x00000000u)
+#define AD8568_BUSY_POL_LOW		(0x04000000u)
+
+#define AD8568_PowerDown		(0x02000000u)
+
+#define AD8568_RangeA_4VREF		(0x00000000u)
+#define AD8568_RangeA_2VREF		(0x01000000u)
+
+#define AD8568_RangeB_4VREF		(0x00000000u)
+#define AD8568_RangeB_2VREF		(0x00800000u)
+
+#define AD8568_RangeC_4VREF		(0x00000000u)
+#define AD8568_RangeC_2VREF		(0x00200000u)
+
+#define AD8568_RangeD_4VREF		(0x00000000u)
+#define AD8568_RangeD_2VREF		(0x00080000u)
+
+#define AD8568_PowerUpB			(0x00000000u)
+#define AD8568_PowerDownB		(0x00400000u)
+
+#define AD8568_PowerUpC			(0x00000000u)
+#define AD8568_PowerDownC		(0x00100000u)
+
+#define AD8568_PowerUpD			(0x00000000u)
+#define AD8568_PowerDownD		(0x00040000u)
+
+#define AD8568_REF_DISABLE		(0x00000000u)
+#define AD8568_REF_ENABLE		(0x00008000u)
+
+#define AD8568_REFBUF_ENABLE		(0x00000000u)
+#define AD8568_REFBUF_DISABLE		(0x00004000u)
+
+#define AD8568_REF_SET2V5		(0x00000000u)
+#define AD8568_REF_SET3V		(0x00002000u)
+
+#define AD8568_REFDAC_FULL		(0x000003FFu)
+
+typedef void (* TRIGGER_CALLBACK)(float *data, unsigned int count, void *user_data);
+
+typedef struct _ads8568 ads8568;
+
+
+void 	ads8568_write_reg( ads8568 *ad, unsigned int value ) ;
+void 	ads8568_set_channel(ads8568 *ad, unsigned int ch) ;
+void 	ads8568_trigger(ads8568 *ad, unsigned int count, TRIGGER_CALLBACK cb, void *user_data) ;
+void 	ads8568_stop(ads8568 *ad);
+void 	ads8568_start(ads8568 *ad, unsigned int rate) ;
+void 	ads8568_reset( ads8568 *ad );
+
+void 	ads8568_irq_setup(ads8568 *ad);
+void 	ads8568_gpio_setup(ads8568 *ad) ;
+void ads8568_emifa_init(ads8568 *ad) ;
+
+
+extern ads8568 * ads8568_new(unsigned int range, RingBuffer *buffer) ;
+extern void 	ads8568_destroy(ads8568 *ad);
+
+#endif
