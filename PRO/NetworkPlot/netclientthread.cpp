@@ -133,25 +133,11 @@ void NetClientThread::on_read_message()
 
 QByteArray NetClientThread::check_packet(QByteArray array)
 {
-
     QByteArray left;
     QByteArray true_packet;
     left.clear();
     true_packet.clear();
-/*
-    if (array.contains("ab") && array.contains("cd") && \
-        (array.indexOf("ab") < array.lastIndexOf("cd")) ) {
-        true_packet = array.mid(array.indexOf("ab"), array.lastIndexOf("cd") - array.indexOf("ab") + 2);
-        deal_true_packet(array);
-        if ( array.length() - array.lastIndexOf("cd") + 2 != 0 ) {
-            left.append( array.mid(array.lastIndexOf("cd") + 2, array.length() - array.lastIndexOf("cd")) );
-            return left;
-        }else{
-            left.clear();
-            return left;
-        }
-    }
-*/
+
     if (array.contains("ab") && array.contains("cd") && \
         (array.indexOf("ab") < array.indexOf("cd")) ) {
         true_packet = array.mid(array.indexOf("ab"), array.indexOf("cd") - array.indexOf("ab") + 2);

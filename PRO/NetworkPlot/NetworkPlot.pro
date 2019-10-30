@@ -47,17 +47,20 @@ SOURCES += \
         mainwindow.cpp \
     netclientthread.cpp \
     ringbuffer.cpp \
-    filemanager.cpp
+    filemanager.cpp \
+    dialog.cpp
 
 HEADERS += \
     mainwindow.h \
     netclientthread.h \
     com.h \
     ringbuffer.h \
-    filemanager.h
+    filemanager.h \
+    dialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    dialog.ui
 
 RESOURCES += \
     images.qrc

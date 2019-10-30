@@ -587,7 +587,7 @@
      <x>0</x>
      <y>0</y>
      <width>1249</width>
-     <height>19</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -596,11 +596,13 @@
     </property>
     <addaction name="actionexit"/>
     <addaction name="actionclear_all"/>
+    <addaction name="action"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>About</string>
     </property>
+    <addaction name="actionshujufenge"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -704,6 +706,16 @@
    </property>
    <property name="text">
     <string>exit</string>
+   </property>
+  </action>
+  <action name="actionshujufenge">
+   <property name="text">
+    <string>shujufenge </string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>数据文件分割</string>
    </property>
   </action>
  </widget>

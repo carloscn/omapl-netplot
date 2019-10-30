@@ -805,3 +805,10 @@ void MainWindow::on_actionexit_2_triggered()
 {
     on_actionexit_triggered();
 }
+
+void MainWindow::on_action_triggered()
+{
+    dialog = new Dialog();
+    dialog->setModal(true);
+    dialog->show();
+}

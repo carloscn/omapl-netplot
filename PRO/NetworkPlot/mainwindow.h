@@ -33,6 +33,8 @@
 #include <QTableWidget>
 #include <QDateTime>
 #include "fftw3.h"
+#include "dialog.h"
+
 #define         CHANNEL_0           0
 #define         CHANNEL_1           1
 #define         CHANNEL_2           2
@@ -104,6 +106,8 @@ private slots:
 
     void on_actionexit_2_triggered();
 
+    void on_action_triggered();
+
 signals:
 
     void net_close_file();
@@ -148,6 +152,7 @@ private:
     QProgressBar *c_bar;
     bool is_start_read_socket;
     FileManager *fileMnger;
+    Dialog *dialog;
 };
 
 #endif // MAINWINDOW_H
