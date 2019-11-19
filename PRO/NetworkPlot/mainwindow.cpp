@@ -660,7 +660,7 @@ void MainWindow::qwt_plot_fft(int channel, double *rom, int NP)
     for( quint64 i = 0; i < 120 ; i++ ){
         QPointF point;
         current_fft_value = sqrt(out1_c[i][0] * out1_c[i][0] + out1_c[i][1] * out1_c[i][1]);
-        point.setX((210000/500)*i);
+        point.setX((125000/500)*i);
         if ( i < 2 )
             point.setY(0);
         else

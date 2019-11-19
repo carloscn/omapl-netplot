@@ -45,7 +45,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEditOutputPath"/>
+      <widget class="QLineEdit" name="lineEditOutputPath">
+       <property name="text">
+        <string>D:/data</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonSelectPath">

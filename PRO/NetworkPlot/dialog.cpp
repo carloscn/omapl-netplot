@@ -19,9 +19,9 @@ void Dialog::on_pushButtonSelectDoc_clicked()
 {
     QString fileNameStr;
 
-    fileNameStr = QFileDialog::getSaveFileName(this,                              \
+    fileNameStr = QFileDialog::getOpenFileName(this,                              \
                                                tr("Open File"),                   \
-                                               QApplication::applicationDirPath(),\
+                                               "D:\\data",\
                                                "Binary Document(*.bin;*.hex)",           \
                                                0);
     this->input_doc = fileNameStr;
@@ -31,7 +31,9 @@ void Dialog::on_pushButtonSelectDoc_clicked()
 void Dialog::on_pushButtonSelectPath_clicked()
 {
     QString fileNameStr;
-    fileNameStr = QFileDialog::getExistingDirectory(this,"Please slect file dir","D:\\");
+    fileNameStr = QFileDialog::getExistingDirectory(this,"Please slect file dir","D:\\data");
+    if (fileNameStr.isEmpty())
+        return;
     this->output_path = fileNameStr;
     ui->lineEditOutputPath->setText(fileNameStr);
 }

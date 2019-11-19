@@ -717,6 +717,9 @@
    <property name="text">
     <string>数据文件分割</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
