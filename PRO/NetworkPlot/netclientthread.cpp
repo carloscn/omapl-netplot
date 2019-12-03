@@ -28,8 +28,9 @@ NetClientThread::NetClientThread( QString server_ip, quint16 server_port )
 bool NetClientThread::set_connect(QString server_ip, quint16 server_port)
 {
     qDebug() << "netclientread@set_connect() >: seting the connection to " <<  server_ip;
-    socket->connectToHost( server_ip, server_port , QIODevice::ReadWrite );
-    if( !socket->waitForConnected(30000) ) {
+    socket->connectToHost( QHostAddress(server_ip), server_port , QIODevice::ReadWrite );
+    if( !socket->waitForConnected(500) ) {
+        qDebug() << socket->error();
         qDebug("netclientread@set_connect() >: socket Connection failed!!");
         return false;
     }else {
@@ -138,9 +139,9 @@ QByteArray NetClientThread::check_packet(QByteArray array)
     left.clear();
     true_packet.clear();
 
-    if (array.contains("ab") && array.contains("cd") && \
-        (array.indexOf("ab") < array.indexOf("cd")) ) {
-        true_packet = array.mid(array.indexOf("ab"), array.indexOf("cd") - array.indexOf("ab") + 2);
+    if (array.contains("abcd") && array.contains("cdab") && \
+        (array.indexOf("abcd") < array.indexOf("cdab")) ) {
+        true_packet = array.mid(array.indexOf("abcd"), array.indexOf("cdab") - array.indexOf("abcd") + 2);
         deal_true_packet(true_packet);
         qDebug() << "found a true packet.";
     }
@@ -162,8 +163,8 @@ bool NetClientThread::deal_true_packet(QByteArray array)
         char c_8[8];
     } r;
 
-    header_count = array.count("ab");
-    tail_count = array.count("cd");
+    header_count = array.count("abcd");
+    tail_count = array.count("cdab");
     QByteArray *seper_array = new QByteArray[header_count];
 
     if ( (header_count != tail_count) | (header_count < 1) )

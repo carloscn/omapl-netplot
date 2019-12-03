@@ -58,8 +58,8 @@ void Dialog::on_pushButtonSep_clicked()
         char c_8[8];
     } r;
 
-    header_count = input_array.count("ab");
-    tail_count = input_array.count("cd");
+    header_count = input_array.count("abcd");
+    tail_count = input_array.count("cdab");
 
     if ( (header_count != tail_count) ) {
         qDebug() << " header count is :" << header_count;
@@ -69,12 +69,16 @@ void Dialog::on_pushButtonSep_clicked()
     qDebug() << "doc include " << header_count << " packet;";
     QByteArray *seper_array = new QByteArray[header_count];
     int count = 0;
-    while (!input_array.isEmpty()) {
+    for (uint32_t j = 0; !input_array.isEmpty(); j++ ) {
+    //while (!input_array.isEmpty() ) {
+        count = j;
+        qDebug() << "count=  " << count  << "  length =" << header_count;
         seper_array[count].append( input_array.mid(0, input_array.indexOf("cd") + 2));
         input_array.remove(0,input_array.indexOf("cd") + 2);
         qDebug() << "deal " << count << " packet; length is :" << seper_array[count].length();
-        count ++;
+        //count ++;
     }
+    qDebug() << "deal headers ok.";
     float *f_buffer;
     quint32 f_len = 0;
     this->outputFile->setFileName(this->output_path + "\\float_data.txt");
