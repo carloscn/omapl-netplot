@@ -208,7 +208,7 @@ bool NetClientThread::deal_true_packet(QByteArray array)
             }
         }
     }
-
+    delete seper_array;
     emit net_data_plot(f_buffer, 2048);
     // process the data;
 }

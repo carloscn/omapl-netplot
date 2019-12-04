@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QString>
 #include <QMessageBox>
+#include <QList>
 
 namespace Ui {
 class Dialog;
@@ -36,6 +37,7 @@ private:
     Ui::Dialog *ui;
     QString input_doc;
     QString output_path;
+    QByteArray *seper_array;
 };
 
 #endif // DIALOG_H

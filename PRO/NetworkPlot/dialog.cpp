@@ -69,12 +69,11 @@ void Dialog::on_pushButtonSep_clicked()
     }else {
         qDebug() << "doc include " << tail_count << " packet;";
     }
-    QByteArray *seper_array = new QByteArray[tail_count];
+    seper_array = new QByteArray[tail_count];
     int count = 0;
     input_array.remove(0,input_array.indexOf("cdab") + 4);
     do {
         seper_array[count].append( input_array.mid(input_array.indexOf("abcd") + 4, input_array.indexOf("cdab") ));
-
         input_array.remove(0,input_array.indexOf("cdab") + 4);
         qDebug() << "deal " << count << " packet; length is :" << seper_array[count].length();
         count ++;
@@ -120,7 +119,10 @@ void Dialog::on_pushButtonSep_clicked()
             out << number_str << ",";
         }
         free(f_buffer);
+
     }
+
+    delete[] seper_array;
     this->outputFile->close();
     ui->state->setText("分割完毕....");
 }
