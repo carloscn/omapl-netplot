@@ -61,6 +61,13 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="state">
+     <property name="text">
+      <string>状态：</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="pushButtonSep">
      <property name="text">
       <string>开始分割</string>

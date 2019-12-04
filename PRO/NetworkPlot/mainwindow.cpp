@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pixmap.load(":/images/welcome_3.png");
     screen.setPixmap(pixmap);
     screen.show();
-    QThread::sleep(3);
+    QThread::sleep(0);
     this->setWindowTitle("Network Plot");
     this->setWindowIcon(QIcon(":/images/ring.svg"));
     /*
@@ -660,7 +660,7 @@ void MainWindow::qwt_plot_fft(int channel, double *rom, int NP)
     for( quint64 i = 0; i < 120 ; i++ ){
         QPointF point;
         current_fft_value = sqrt(out1_c[i][0] * out1_c[i][0] + out1_c[i][1] * out1_c[i][1]);
-        point.setX((125000/500)*i);
+        point.setX((125000/2083)*i);
         if ( i < 2 )
             point.setY(0);
         else

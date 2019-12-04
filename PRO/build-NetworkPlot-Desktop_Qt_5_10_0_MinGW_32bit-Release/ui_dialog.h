@@ -36,6 +36,7 @@ public:
     QLabel *label_2;
     QLineEdit *lineEditOutputPath;
     QPushButton *pushButtonSelectPath;
+    QLabel *state;
     QPushButton *pushButtonSep;
     QDialogButtonBox *buttonBox;
 
@@ -86,6 +87,11 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_2);
 
+        state = new QLabel(Dialog);
+        state->setObjectName(QStringLiteral("state"));
+
+        verticalLayout->addWidget(state);
+
         pushButtonSep = new QPushButton(Dialog);
         pushButtonSep->setObjectName(QStringLiteral("pushButtonSep"));
 
@@ -114,6 +120,7 @@ public:
         label_2->setText(QApplication::translate("Dialog", "\350\276\223\345\207\272\346\225\260\346\215\256\346\226\207\344\273\266\357\274\232", nullptr));
         lineEditOutputPath->setText(QApplication::translate("Dialog", "D:/data", nullptr));
         pushButtonSelectPath->setText(QApplication::translate("Dialog", "\351\200\211\346\213\251\350\267\257\345\276\204", nullptr));
+        state->setText(QApplication::translate("Dialog", "\347\212\266\346\200\201\357\274\232", nullptr));
         pushButtonSep->setText(QApplication::translate("Dialog", "\345\274\200\345\247\213\345\210\206\345\211\262", nullptr));
     } // retranslateUi
 

@@ -119,14 +119,18 @@ void    netsocket::on_dsp_data_recv(std::vector<float> raw)
         char c_8[8];
     } r;
 
-    char header[2];
-    char tail[2];
+    char header[4];
+    char tail[4];
     header[0] = 'a';
     header[1] = 'b';
+    header[2] = 'c';
+    header[3] = 'd';
     tail[0] = 'c';
     tail[1] = 'd';
+    tail[2] = 'a';
+    tail[3] = 'b';
     size_t size = raw.size();
-    send_rom.append(header,2);
+    send_rom.append(header,4);
     r.u_64 = packet_number;
     send_rom.append(r.c_8,8);
     r.u_64 = size;
@@ -135,8 +139,8 @@ void    netsocket::on_dsp_data_recv(std::vector<float> raw)
         r.f_64 = (double)raw.at(i);
         send_rom.append(r.c_8,8);
     }
-    send_rom.append(tail,2);
-    LOG_DEBUG("send packet length = %g", size * 8.0 + 4 + 16);
+    send_rom.append(tail,4);
+    LOG_DEBUG("send packet length = %g", size * 8.0 + 8 + 16);
     socket->write(send_rom);
     socket->flush();
     packet_number ++;

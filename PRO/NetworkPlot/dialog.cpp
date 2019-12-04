@@ -8,6 +8,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
     this->inputFile = new QFile();
     this->outputFile = new QFile();
+    this->output_path = "D:\\data";
 }
 
 Dialog::~Dialog()
@@ -50,7 +51,7 @@ void Dialog::on_pushButtonSep_clicked()
 
     quint64 packet_number;
     quint64 data_length;
-    quint8 *socket_buffer;
+
 
     union result {
         quint64 u_64;
@@ -65,50 +66,53 @@ void Dialog::on_pushButtonSep_clicked()
         qDebug() << " header count is :" << header_count;
         qDebug() << " tail count is : " << tail_count;
         header_count -= 1;
+    }else {
+        qDebug() << "doc include " << tail_count << " packet;";
     }
-    qDebug() << "doc include " << header_count << " packet;";
-    QByteArray *seper_array = new QByteArray[header_count];
+    QByteArray *seper_array = new QByteArray[tail_count];
     int count = 0;
-    for (uint32_t j = 0; !input_array.isEmpty(); j++ ) {
-    //while (!input_array.isEmpty() ) {
-        count = j;
-        qDebug() << "count=  " << count  << "  length =" << header_count;
-        seper_array[count].append( input_array.mid(0, input_array.indexOf("cd") + 2));
-        input_array.remove(0,input_array.indexOf("cd") + 2);
+    input_array.remove(0,input_array.indexOf("cdab") + 4);
+    do {
+        seper_array[count].append( input_array.mid(input_array.indexOf("abcd") + 4, input_array.indexOf("cdab") ));
+
+        input_array.remove(0,input_array.indexOf("cdab") + 4);
         qDebug() << "deal " << count << " packet; length is :" << seper_array[count].length();
-        //count ++;
-    }
+        count ++;
+    }while ( count<tail_count-1 );
     qDebug() << "deal headers ok.";
+
     float *f_buffer;
     quint32 f_len = 0;
     this->outputFile->setFileName(this->output_path + "\\float_data.txt");
-    this->outputFile->open(QIODevice::Append  | QIODevice::Text | QIODevice::WriteOnly);
-    QTextStream out(this->outputFile);
-
-    for ( quint32 k = 0; k < count; k ++ ) {
-        socket_buffer = (quint8*)malloc(sizeof(quint8)*seper_array[k].length()*8);
-        for (quint64 i = 0; i < seper_array[k].length(); i ++) {
-            socket_buffer[i] =  seper_array[k].at(i);
+    QFileInfo fileInfo(this->outputFile->fileName());
+    if (fileInfo.isFile()) {
+        QMessageBox::StandardButton rb = QMessageBox::information(NULL,"询问","float_data.txt文件已经存在，是否覆盖写入？",QMessageBox::Yes | QMessageBox::No);
+        if(rb == QMessageBox::Yes) {
+            this->outputFile->open(QIODevice::Text | QIODevice::WriteOnly);
+        }else {
+            this->outputFile->open(QIODevice::Append  | QIODevice::Text | QIODevice::WriteOnly);
         }
-
-        free(socket_buffer);
-        f_len = (seper_array[k].length() - 20) / 8 - 2;
+    }
+    QTextStream out(this->outputFile);
+    for ( quint32 k = 0; k < count-1; k ++ ) {
+        // 获取payload的长度值
+        f_len = (seper_array[k].length() - 16 - 8) / 8;
         f_buffer = (float*)malloc(sizeof(float)*f_len);
-        for (quint64 i = 0; i < (seper_array[k].length() - 20) / 8; i ++) {
+        qDebug() << "payload buffer long:" << f_len;
+        // 提取数据包编号32位，数据长度32位，payload f_len*8位
+        for (quint64 i = 0; i < f_len + 2 ; i ++) {
             for (quint64 j = 0; j < 8; j ++)
-                r.c_8[j]  = seper_array[k].at(2 + i*8 + j);
+                r.c_8[j]  = seper_array[k].at( i*8 + j);
             if (i == 0) {
                 packet_number = r.u_64;
                 qDebug() << "packet number :" << packet_number;
+                ui->state->setText( QString("处理") +  QString("packet number :") +  QString::number(packet_number));
             }
             if (i == 1) {
                 data_length = r.u_64;
             }
             if (i >= 2) {
                 f_buffer[i - 2] = r.f_64;
-//                if (i > 2048) {
-//                    break;
-//                }
             }
         }
         for (quint32 m = 0; m < f_len; m ++) {
@@ -118,4 +122,5 @@ void Dialog::on_pushButtonSep_clicked()
         free(f_buffer);
     }
     this->outputFile->close();
+    ui->state->setText("分割完毕....");
 }

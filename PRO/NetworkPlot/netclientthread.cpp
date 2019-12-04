@@ -123,11 +123,11 @@ void NetClientThread::on_read_message()
 {
     if (socket->bytesAvailable() < ONE_PACKET_LENGTH)
         return;
-    QByteArray net_buffer;
-    net_buffer.append(socket->read(ONE_PACKET_LENGTH));
+    array_rom.append(socket->read(ONE_PACKET_LENGTH));
     if (isEnableSave == true)
-        emit net_data_save_to_disk((quint8*)net_buffer.data(), net_buffer.length());
-    array_rom.append(net_buffer);
+        emit net_data_save_to_disk((quint8*)array_rom.data(), array_rom.length());
+    qDebug() << array_rom.indexOf("abcd");
+    qDebug() << array_rom.indexOf("cdab");
     check_packet(array_rom);
     array_rom.clear();
 }
@@ -141,9 +141,11 @@ QByteArray NetClientThread::check_packet(QByteArray array)
 
     if (array.contains("abcd") && array.contains("cdab") && \
         (array.indexOf("abcd") < array.indexOf("cdab")) ) {
-        true_packet = array.mid(array.indexOf("abcd"), array.indexOf("cdab") - array.indexOf("abcd") + 2);
+        true_packet = array.mid(array.indexOf("abcd") , array.indexOf("cdab")+4);
         deal_true_packet(true_packet);
         qDebug() << "found a true packet.";
+    }else  {
+        qDebug() << "found a error packet.";
     }
     left = array;
     return left;
@@ -167,14 +169,19 @@ bool NetClientThread::deal_true_packet(QByteArray array)
     tail_count = array.count("cdab");
     QByteArray *seper_array = new QByteArray[header_count];
 
-    if ( (header_count != tail_count) | (header_count < 1) )
-        return false;
-    //qDebug() << "include " << header_count << " packet;";
+    if ( (header_count != tail_count) | (header_count < 1) ){
+         qDebug() << "head and tail count not equals";
+         qDebug() << "header : " << header_count ;
+         qDebug() << "tail :" << tail_count;
+         return false;
+    }
+
+    qDebug() << "include " << header_count << " packet;";
 
     int count = 0;
     while (!array.isEmpty()) {
-        seper_array[count].append( array.mid(0, array.indexOf("cd") + 2));
-        array.remove(0,array.indexOf("cd") + 2);
+        seper_array[count].append( array.mid(array.indexOf("abcd") + 4, array.indexOf("cdab") ) );
+        array.remove(0,array.indexOf("cdab") + 4);
         count ++;
         //qDebug() << "deal " << count << " packet; length is :" << seper_array[0].length();
     }
@@ -186,7 +193,7 @@ bool NetClientThread::deal_true_packet(QByteArray array)
     free(socket_buffer);
     for (quint64 i = 0; i < (seper_array[0].length() - 20) / 8; i ++) {
         for (quint64 j = 0; j < 8; j ++)
-            r.c_8[j]  = seper_array[0].at(2 + i*8 + j);
+            r.c_8[j]  = seper_array[0].at(i*8 + j);
         if (i == 0) {
             packet_number = r.u_64;
             qDebug() << "packet number :" << packet_number;

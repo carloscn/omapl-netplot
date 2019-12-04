@@ -12,7 +12,7 @@
 #include "com.h"
 #include "ringbuffer.h"
 #include "filemanager.h"
-#define             ONE_PACKET_LENGTH           (109244ul)
+#define             ONE_PACKET_LENGTH           (109248ul)
 
 struct bcd_sper_t{
     uint8_t bit24_32;
