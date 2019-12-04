@@ -92,6 +92,9 @@ void Dialog::on_pushButtonSep_clicked()
             this->outputFile->open(QIODevice::Append  | QIODevice::Text | QIODevice::WriteOnly);
         }
     }
+    if (!this->outputFile->isOpen()) {
+        this->outputFile->open(QIODevice::Append  | QIODevice::Text | QIODevice::WriteOnly);
+    }
     QTextStream out(this->outputFile);
     for ( quint32 k = 0; k < count-1; k ++ ) {
         // 获取payload的长度值
